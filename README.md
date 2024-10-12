@@ -44,7 +44,7 @@ local means you have to evict the least recently used page of the same process f
 You have to write a C program in a single file called simulation.c, and compiled as an executable called simulation. It will read two file names from the command line, in.txt and out.txt. The first file is the one mentioned above, for reading process ids. The second file is an output file where you should print the following information at the end of the simulation. Your submission will be executed as:
 simulation in.txt out.txt
 • The page tables of the four processes in separate lines. For example, the page table for process 0 may look like this:
-0, 0, 0, 1
+    0, 0, 0, 1
 You have to also print the content of the RAM, each location separated by a ’;’. For example, the RAM may look like this:
      0,0,5; 0,0,5; 2,0,1; 2,0,1; etc. (16 entries)
 Note that, the first two locations of the RAM stores page 0 of process 0, as each page occupies two array locations of the RAM. Also, this page was brought to RAM at time step 5.

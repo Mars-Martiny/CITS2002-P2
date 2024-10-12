@@ -1,5 +1,6 @@
 // Maryam Saeed 23121354
 // Rohma Rehman 23845362
+// mac or linux ?????
 
 // Include necessary header files
 #include <stdio.h>
@@ -25,6 +26,7 @@ struct memory     *vm[32]; //array representing vm (32 locations)
 int      page_table[4][4]; //page table for 4 processes with 4 pages
 
 
+//Rohma
 //funct 1: initialise vm for 4 processes, each with 4 pages
 void init_vm(){
     /*
@@ -39,7 +41,7 @@ void init_vm(){
     */
 }
 
-
+//Mars
 //funct 2: bring pages from vm to ram when requested
 void page_to_ram(int process_id, int current_time){
     /*
@@ -53,6 +55,7 @@ void page_to_ram(int process_id, int current_time){
     */
 }
 
+//Rohma
 //funct 3: read process requests from input file and simulate page requests
 void simulate(const char *input_file){
     /*
@@ -66,6 +69,7 @@ void simulate(const char *input_file){
     */
 }
 
+//Mars
 //funct 4: print page tables and ram content to output file after simulation
 void output_simulate(const char *output_file){
     /*
