@@ -26,6 +26,10 @@ struct memory     *vm[32]; //array representing vm (32 locations)
 int      page_table[4][4]; //page table for 4 processes with 4 pages
 
 
+//Mars
+//error things n whatnot
+//
+
 //Rohma
 //funct 1: initialise vm for 4 processes, each with 4 pages
 void init_vm(){
@@ -81,6 +85,8 @@ void output_simulate(const char *output_file){
     */
 }
 
+
+//Rohma
 //main funct
 int main(int argc, char *argv[]){
     /*
