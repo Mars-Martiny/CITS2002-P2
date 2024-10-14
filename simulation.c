@@ -14,11 +14,11 @@
 
 
 //struct to represent page in memory
-struct memory {
+typedef struct{
       int process_id;
       int page_num;
       int last_accessed;
-};
+}memory;
 
 
 //defn ram and vm arrays
@@ -102,7 +102,7 @@ void simulate(const char *input_file){
    }
 
    int process_id, current_time = 0;
-   
+
 }
 
 //Mars
