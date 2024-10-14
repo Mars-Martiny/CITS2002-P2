@@ -13,6 +13,7 @@
 //funct = function
 
 
+// Define given constants 
 #define NUM_PROCESSES 4      // Total number of processes
 #define PAGES_PER_PROCESS 4  // Pages per process
 #define RAM_SIZE 16          // Total RAM size (array length)
@@ -28,14 +29,19 @@ typedef struct{
 
 
 //defn ram and vm arrays
-memory    *ram[RAM_SIZE];   //array representing ram (16 locations)
-memory     *vm[VM_SIZE];    //array representing vm (32 locations)
-int      page_table[4][4];  //page table for 4 processes with 4 pages
+memory    *ram[RAM_SIZE];    //array representing ram (16 locations)
+memory    *vm[VM_SIZE];      //array representing vm (32 locations)
+int       page_table[4][4];  //page table for 4 processes with 4 pages each
+
+// global defenition of time step
+int time_step = 0;       // Simulation time 
+int ram_page_count = 0;  // track no. of pages in RAM
 
 
 //Mars
-//error things n whatnot
-//
+//check in.txt and out.txt exist
+//check contents of in.txt
+
 
 //Rohma
 //funct 1: initialise vm for 4 processes, each with 4 pages
