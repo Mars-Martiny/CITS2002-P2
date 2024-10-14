@@ -67,8 +67,6 @@ void init_vm(){
             return;
         }
 
-        page_info ->process_id = process_id;
-        page_info ->page_num = page_num;
         page_info ->last_accessed = 0;
 
         vm[vm_pg_index] = page_info;
