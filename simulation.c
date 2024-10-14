@@ -13,6 +13,12 @@
 //funct = function
 
 
+#define NUM_PROCESSES 4      // Total number of processes
+#define PAGES_PER_PROCESS 4  // Pages per process
+#define RAM_SIZE 16          // Total RAM size (array length)
+#define VM_SIZE 32           // Total Virtual Memory size
+
+
 //struct to represent page in memory
 typedef struct{
       int process_id;
@@ -22,9 +28,9 @@ typedef struct{
 
 
 //defn ram and vm arrays
-struct memory    *ram[16]; //array representing ram (16 locations)
-struct memory     *vm[32]; //array representing vm (32 locations)
-int      page_table[4][4]; //page table for 4 processes with 4 pages
+memory    *ram[RAM_SIZE];   //array representing ram (16 locations)
+memory     *vm[VM_SIZE];    //array representing vm (32 locations)
+int      page_table[4][4];  //page table for 4 processes with 4 pages
 
 
 //Mars
