@@ -14,11 +14,12 @@
 
 
 //struct to represent page in memory
-struct{
+struct memory {
       int process_id;
       int page_num;
       int last_accessed;
-      }memory;
+};
+
 
 //defn ram and vm arrays
 struct memory    *ram[16]; //array representing ram (16 locations)
@@ -43,6 +44,29 @@ void init_vm(){
     - store page in vm
     - update page table
     */
+   int vm_pg_index = 0;
+
+   for (int process = 0; process<4; process++) {
+    for (int page = 0; page<4; page++) {
+        struct memory *page_info = (struct memory *)malloc(sizeof(struct memory));
+
+        if (page_info == NULL){
+            printf("Memory allocation failed\n");
+            return;
+        }
+
+        page_info ->process_id = process_id;
+        page_info ->page_num = page_num;
+        page_info ->last_accessed = 0;
+
+        vm[vm_pg_index] = page_info;
+        vm[vm_pg_index + 1] = page_info;
+
+        vm_pg_index += 2;
+
+        page_table[process][page] = 1;
+    }
+   }
 }
 
 //Mars
@@ -96,4 +120,5 @@ int main(int argc, char *argv[]){
     - output final results
     - return success
     */
+   init_vm();
 }
