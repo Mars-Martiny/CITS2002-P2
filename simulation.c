@@ -60,7 +60,7 @@ void init_vm(){
 
    for (int process = 0; process<4; process++) {
     for (int page = 0; page<4; page++) {
-        struct memory *page_info = (struct memory *)malloc(sizeof(struct memory));
+        memory *page_info = (memory *)malloc(sizeof(memory));
 
         if (page_info == NULL){
             printf("Memory allocation failed\n");
