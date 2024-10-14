@@ -95,6 +95,14 @@ void simulate(const char *input_file){
     - incrememnt simulation time
     - close input file
     */
+   FILE *file = fopen(input_file,"r");
+   if (!file) {
+    printf("Error in opening file %s\n", input_file);
+    return;
+   }
+
+   int process_id, current_time = 0;
+   
 }
 
 //Mars
