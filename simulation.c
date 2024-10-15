@@ -5,6 +5,11 @@
 // Include necessary header files
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <io.h>
+
+#define access _access      //for the <io.h> header file ,, instead of <unistd.h>
 
 //key:
 //vm = virtual memory
@@ -33,19 +38,78 @@ memory    *ram[RAM_SIZE];    //array representing ram (16 locations)
 memory    *vm[VM_SIZE];      //array representing vm (32 locations)
 int       page_table[4][4];  //page table for 4 processes with 4 pages each
 
-// global defenition of time step
+//global defn of time step
 int time_step = 0;       // Simulation time 
 int ram_page_count = 0;  // track no. of pages in RAM
+
+//defn array to hold process_id integers from in.txt 
+int input[100];
+int input_count = 0;    //initialist input count      
 
 
 //Mars
 //check in.txt and out.txt exist
 //check contents of in.txt
 
+// Function to print usage error information
+void print_usage(const char *program_name) {
+    fprintf(stderr, "Usage: %s <ml_file> in.txt out.txt\n", program_name);
+    exit(1);
+}
+// Function to report errors with line numbers
+void report_error(const char *message, int line_number) {
+    fprintf(stderr, "! Error on line %d: %s\n", line_number, message);
+    exit(1);
+}
+
+
+// Function to validate the contents of the in.txt file (a single line of integers separated by blanks)
+void validate_in_contents(FILE *in_file) {
+    char line[1000];
+    int line_number = 0;
+    int line_count = 0;
+    
+
+    int in_function = 0;
+
+    while (fgets(line, sizeof(line), in_file)) {
+        line_number++;
+        
+        // Trim leading whitespace
+        char *trimmed = line;
+        while (*trimmed && isspace(*trimmed)) {
+            trimmed++;
+        }
+        if (*trimmed == '\0') {     //skip over empty line
+            continue;
+        }
+
+        for (int i = 0 ; i < length(trimmed) ; i++) {
+            if (i%2 == 0) {
+                if (isdigit(trimmed[i])) {
+                    int process_id = atoi(trimmed[i]);
+                    input[input_count] = process_id;
+                    input_count++;
+                }
+
+            }
+            else {
+                //if (trimmed[i] != ' ') {
+
+            }
+        }
+
+
+        if (line_count == 2 ) {
+            report_error("MORE THAN ONE LINE", line_number);
+        }
+
+    }
+}
+
 
 //Rohma
 //funct 1: initialise vm for 4 processes, each with 4 pages
-void init_vm(){
     /*
     - set up vm for system by initialising memory pages for each process and setting up page table to indicate all pages are initially in disk (vm)
     - loop over each process
@@ -56,6 +120,7 @@ void init_vm(){
     - store page in vm
     - update page table
     */
+void init_vm(){
    int vm_pg_index = 0;
 
    for (int process = 0; process<4; process++) {
@@ -67,7 +132,7 @@ void init_vm(){
             return;
         }
 
-        page_info ->last_accessed = 0;
+        page_info ->last_accessed = 0;  //initialise last accessed time to 0
 
         vm[vm_pg_index] = page_info;
         vm[vm_pg_index + 1] = page_info;
@@ -128,9 +193,8 @@ void output_simulate(const char *output_file){
 }
 
 
-//Rohma
+//Mars & Rohma xoxo
 //main funct
-int main(int argc, char *argv[]){
     /*
     - check command line args
     - initialise virtual memory
@@ -138,5 +202,53 @@ int main(int argc, char *argv[]){
     - output final results
     - return success
     */
+int main(int argc, char *argv[]){
+    // Check for correct usage      ...ie. simulation in.txt out.txt
+    if (argc != 3) {
+        print_usage(argv[0]);
+    }
+    
+    // Validate input file extension (in.txt)
+    char *in_txt = argv[1];
+    char *in_extension = strrchr(in_txt, '.');
+    if (!in_extension || strcmp(in_extension, ".txt") != 0) {
+        fprintf(stderr, "! Error: Input file must have .txt extension\n");
+        exit(1);
+    }
+
+    // Open input file
+    FILE *in_file = fopen(in_txt, "r");
+    if (!in_file) {
+        perror("Error opening input file");
+        exit(1);
+    }
+
+    // Validate in.txt file contents 
+    validate_in_contents(in_file);
+
+
+    // Validate input file extension (in.txt)
+    char *out_txt = argv[2];
+    char *out_extension = strrchr(out_txt, '.');
+    if (!out_extension || strcmp(out_extension, ".txt") != 0) {
+        fprintf(stderr, "! Error: Output file must have .txt extension\n");
+        exit(1);
+    }
+
+    // Open output file
+    FILE *out_file = fopen(out_txt, "w");
+    if (!out_file) {
+        perror("Error opening output file");
+        exit(1);
+    }
+
+
+    //
    init_vm();
+
+
+    //close files after simulation running completed
+   fclose(in_file);
+   fclose(out_file);
+
 }
