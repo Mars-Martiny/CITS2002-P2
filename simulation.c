@@ -26,6 +26,7 @@
 //struct = structure
 //defn = definition/ define
 //funct = function
+//init = initialise
 
 
 // Define given constants 
@@ -38,6 +39,7 @@
 
 
 //struct to represent page in memory
+//typedef used to give shorthand alias to struct (memory)
 typedef struct{
       int process_id;
       int page_num;
@@ -137,15 +139,24 @@ void validate_in_contents(FILE *in_file) {
 
 
 //HELPER FUNCT for funct 1 helps create and initialise page
-memory *helper(int process_id, int page_num){
+// - allocate memory for each page
+// - using malloc?
+// - initialise struct fields
+memory *creator(int process_id, int page_num){
     memory *page_info = (memory *)malloc(sizeof(memory)); //memory allocaton for a new page
 
     //successful allocation checking
     if (page_info == NULL){
-        printf("Memory allocation failed.\n");
-
+        fprintf(stderr, "Memory allocation failed.\n");
         exit(1); //if allocation fails
     }
+
+    //init fields of struct
+    page_info -> process_id = process_id;
+    page_info -> page_num = page_num;
+    page_info -> last_accessed = 0; //set last accessed as 0 - not accessed yet
+
+    return page_info;
 }
 
 
@@ -155,30 +166,20 @@ memory *helper(int process_id, int page_num){
     - set up vm for system by initialising memory pages for each process and setting up page table to indicate all pages are initially in disk (vm)
     - loop over each process
         - for each process loop over each of their 4 pages 
-    - allocate memory for each page
-        - using malloc?
-    - initialise struct fields
     - store page in vm
     - update page table
     */
 void init_vm(){
    int vm_pg_index = 0;
-
+   
    for (int process = 0; process<4; process++) {
     for (int page = 0; page<4; page++) {
-        memory *page_info = (memory *)malloc(sizeof(memory));
-
-        if (page_info == NULL){
-            printf("Memory allocation failed\n");
-            return;
-        }
-
-        page_info ->last_accessed = 0;  //initialise last accessed time to 0
+        memory *page_info = creator(process, page);
 
         vm[vm_pg_index] = page_info;
         vm[vm_pg_index + 1] = page_info;
 
-        vm_pg_index += 2;
+        vm_pg_index += 2; //move to next 2 slots
 
         page_table[process][page] = 1;
     }
@@ -237,11 +238,11 @@ void page_to_ram(memory *page) {
     - close input file
     */
 void simulate(const char *input_file){
-   FILE *file = fopen(input_file,"r");
+ /*  FILE *file = fopen(input_file,"r");
    if (!file) {
     printf("Error in opening file %s\n", input_file);
     return;
-   }
+  }*/ 
 
    int process_id, current_time = 0;
 
