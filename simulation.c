@@ -242,7 +242,7 @@ void page_to_ram(memory *page) {
     - close input file
     */
 void simulate(const char *input_file){
-    for (int i = 0; i < input_count; i++){
+    for (int i = 0; i < _countof(input) ; i++){
         int process_id = input[i];
         int page_num = 0;
     }
