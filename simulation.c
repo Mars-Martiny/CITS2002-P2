@@ -7,7 +7,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
+//system dependent 
+#ifdef _WIN32
 #include <io.h>
+#define access _access
+
+#else
+#include <unistd.h>
+#endif
 
 #define access _access      //for the <io.h> header file ,, instead of <unistd.h>
 
