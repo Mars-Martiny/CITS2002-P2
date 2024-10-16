@@ -32,7 +32,9 @@
 #define NUM_PROCESSES 4      // Total number of processes
 #define PAGES_PER_PROCESS 4  // Pages per process
 #define RAM_SIZE 16          // Total RAM size (array length)
+#define RAM_PAGES 8          // Max number of pages RAM can hold
 #define VM_SIZE 32           // Total Virtual Memory size
+
 
 
 //struct to represent page in memory
@@ -195,9 +197,32 @@ void init_vm(){
     - bring page into ram
     - update page table and last accessed time
     */
-void page_to_ram(int process_id, int current_time){
-    //insert code
+
+// Function to find and replace a page in RAM using LRU
+void page_to_ram(memory *page) {
+    // If there is room in RAM, just add the page
+    if (ram_page_count < RAM_SIZE) {
+        ram[ram_page_count] = page;
+        ram_page_count++;
+        printf("Loaded page (P%d, %d) into RAM at index %d\n", page->process_id, page->page_num, ram_page_count - 1);
+    } 
+    else {
+        // If RAM is full, implement LRU to replace the oldest page
+        memory *evicted_page = ram[0]; // LRU eviction: evict the last accessed page in RAM
+        printf("Evicting page (P%d, %d) from RAM.\n", evicted_page->process_id, evicted_page->page_num);
+
+        // Shift all other pages forward
+        for (int i = 1; i < RAM_PAGES; i++) {
+            ram[i - 1] = ram[i];
+        }
+
+        // Load the new page into the last slot of RAM
+        ram[RAM_PAGES - 1] = page;
+        printf("Loaded page (P%d, %d) into RAM at index %d\n", page->process_id, page->page_num, RAM_PAGES - 1);
+    }
 }
+
+
 
 
 //Rohma
@@ -255,7 +280,7 @@ int main(int argc, char *argv[]){
     char *in_txt = argv[1];
     char *in_extension = strrchr(in_txt, '.');
     if (!in_extension || strcmp(in_extension, ".txt") != 0) {
-        fprintf(stderr, "! Error: Input file must have .txt extension\n");
+        fprintf(stderr, "Error: Input file must have .txt extension\n");
         exit(1);
     }
 
@@ -274,7 +299,7 @@ int main(int argc, char *argv[]){
     char *out_txt = argv[2];
     char *out_extension = strrchr(out_txt, '.');
     if (!out_extension || strcmp(out_extension, ".txt") != 0) {
-        fprintf(stderr, "! Error: Output file must have .txt extension\n");
+        fprintf(stderr, "Error: Output file must have .txt extension\n");
         exit(1);
     }
 
