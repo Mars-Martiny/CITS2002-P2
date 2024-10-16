@@ -242,12 +242,19 @@ void page_to_ram(memory *page) {
     - close input file
     */
 void simulate(const char *input_file){
+    
+    int page_num = 0;
     for (int i = 0; i < _countof(input) ; i++){
         int process_id = input[i];
-        int page_num = 0;
+
+        memory *page = vm[process_id * PAGES_PER_PROCESS + page_num];
+        page_to_ram(page);
+
+        page_num = (page_num + 1) % PAGES_PER_PROCESS;
+
+        page ->last_accessed = time_step++;
     }
-
-
+ //ADD CHECK HERE?
 }
 
 //Mars
