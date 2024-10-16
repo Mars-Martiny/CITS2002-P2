@@ -242,13 +242,11 @@ void page_to_ram(memory *page) {
     - close input file
     */
 void simulate(const char *input_file){
- /*  FILE *file = fopen(input_file,"r");
-   if (!file) {
-    printf("Error in opening file %s\n", input_file);
-    return;
-  }*/ 
+    for (int i = 0; i < input_count; i++){
+        int process_id = input[i];
+        int page_num = 0;
+    }
 
-   int process_id, current_time = 0;
 
 }
 
