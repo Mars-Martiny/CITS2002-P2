@@ -84,26 +84,46 @@ void validate_in_contents(FILE *in_file) {
             continue;
         }
 
+        //in.txt should contain a single line of integers separated by blanks
         for (int i = 0 ; i < length(trimmed) ; i++) {
             if (i%2 == 0) {
+                //integer
                 if (isdigit(trimmed[i])) {
                     int process_id = atoi(trimmed[i]);
-                    input[input_count] = process_id;
-                    input_count++;
+                    
+                    // process_id is a number between 0 and 3
+                    if (process_id==0 || process_id==1 || process_id==2 || process_id==3) {
+                        input[input_count] = process_id;
+                        input_count++;
+                    }
+                    else {  //wrong digit
+                        report_error("INVALID PROCESS ID", line_number);
+                    }
                 }
-
+                else {  //not a digit
+                    report_error("INVALID PROCESS ID", line_number);
+                }
             }
-            else {
-                //if (trimmed[i] != ' ') {
 
+            //white space
+            else {
+                if (!isspace(trimmed[i])) {
+                    report_error("INCORRECT SYNTAX", line_number);        
+                }
+                else if (trimmed[i] == '\0') {
+                    line_count++;
+                    continue;
+                }
+                else if (trimmed[i] != ' ') {
+                    report_error("INCORRECT SYNTAX", line_number);
+                }
             }
         }
 
-
+        //more than one line of process ids
         if (line_count == 2 ) {
             report_error("MORE THAN ONE LINE", line_number);
         }
-
     }
 }
 
