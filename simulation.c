@@ -58,9 +58,6 @@ int input_count = 0;    //initialist input count
 
 
 //Mars
-//check in.txt and out.txt exist
-//check contents of in.txt
-
 // Function to print usage error information
 void print_usage(const char *program_name) {
     fprintf(stderr, "Usage: %s in.txt out.txt\n", program_name);
@@ -73,14 +70,13 @@ void report_error(const char *message, int line_number) {
 }
 
 
-// Function to validate the contents of the in.txt file (a single line of integers separated by blanks)
+// Function to validate the contents of the in.txt file 
+    // Expectss a single line of integers separated by blanks (aka spaces ' ')
 void validate_in_contents(FILE *in_file) {
     char line[1000];
     int line_number = 0;
     int line_count = 0;
-    
 
-    int in_function = 0;
 
     while (fgets(line, sizeof(line), in_file)) {
         line_number++;
@@ -174,9 +170,9 @@ void init_vm(){
    }
 }
 
+
 //Mars
 //funct 2: bring pages from vm to ram when requested
-void page_to_ram(int process_id, int current_time){
     /*
     - bring a requested page from the vm to the ram
     - if the ram is full apply LRU algorithm to evict least recently used page for the same process
@@ -186,11 +182,13 @@ void page_to_ram(int process_id, int current_time){
     - bring page into ram
     - update page table and last accessed time
     */
+void page_to_ram(int process_id, int current_time){
+    //insert code
 }
+
 
 //Rohma
 //funct 3: read process requests from input file and simulate page requests
-void simulate(const char *input_file){
     /*
     - simulation of paging process by reading input file, containing list of process ids
     - each process id correpsonds to a request to bring a page into the ram
@@ -200,6 +198,7 @@ void simulate(const char *input_file){
     - incrememnt simulation time
     - close input file
     */
+void simulate(const char *input_file){
    FILE *file = fopen(input_file,"r");
    if (!file) {
     printf("Error in opening file %s\n", input_file);
@@ -212,7 +211,6 @@ void simulate(const char *input_file){
 
 //Mars
 //funct 4: print page tables and ram content to output file after simulation
-void output_simulate(const char *output_file){
     /*
     - outputs results of simulation to specified output file, incl final state of each process's page table and the contents of its ram
     - open output file
@@ -220,6 +218,8 @@ void output_simulate(const char *output_file){
     - print contents of ram
     - close output file
     */
+void output_simulate(const char *output_file){
+    //insert code
 }
 
 
