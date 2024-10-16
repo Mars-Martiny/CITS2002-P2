@@ -58,7 +58,7 @@ int ram_page_count = 0;  // track no. of pages in RAM
 
 //defn array to hold process_id integers from in.txt 
 int input[100];
-int input_count = 0;    //initialist input count      
+    //initialist input count      
 
 
 //Mars
@@ -80,7 +80,7 @@ void validate_in_contents(FILE *in_file) {
     char line[1000];
     int line_number = 0;
     int line_count = 0;
-
+    int input_count = 0;
 
     while (fgets(line, sizeof(line), in_file)) {
         line_number++;
@@ -120,7 +120,7 @@ void validate_in_contents(FILE *in_file) {
                 if (!isspace(trimmed[i])) {
                     report_error("INCORRECT SYNTAX", line_number);        
                 }
-                else if (trimmed[i] == '\0') {
+                else if (trimmed[i] == '\0' || trimmed[i] == '\n') {
                     line_count++;
                     continue;
                 }
@@ -202,14 +202,19 @@ void init_vm(){
 // Function to find and replace a page in RAM using LRU
 void page_to_ram(memory *page) {
     // If there is room in RAM, just add the page
-    if (ram_page_count < RAM_SIZE) {
-        ram[ram_page_count] = page;
+    if (ram_page_count < RAM_PAGES) {
+        ram[2 * ram_page_count] = page;
+        ram[2 * ram_page_count + 1] = page;     //page in 2 contiguous locations
+        printf("Loaded page (P%d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, 2*ram_page_count, 2*ram_page_count + 1);
         ram_page_count++;
-        printf("Loaded page (P%d, %d) into RAM at index %d\n", page->process_id, page->page_num, ram_page_count - 1);
     } 
     else {
+        // if (  ) {
+
+        // }
         // If RAM is full, implement LRU to replace the oldest page
-        memory *evicted_page = ram[0]; // LRU eviction: evict the last accessed page in RAM
+        memory *evicted_page = ram[0]; // LRU eviction: evict the last accessed page in 
+        
         printf("Evicting page (P%d, %d) from RAM.\n", evicted_page->process_id, evicted_page->page_num);
 
         // Shift all other pages forward
