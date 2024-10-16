@@ -229,10 +229,9 @@ void page_to_ram(memory *page) {
 //Rohma
 //funct 3: read process requests from input file and simulate page requests
     /*
-    - simulation of paging process by reading input file, containing list of process ids
-    - each process id correpsonds to a request to bring a page into the ram
-    - open input file
-    - read process ids from file
+    - simulation of paging process by reading input array (global array), containing list of process ids
+    - each process id corresponds to a request to bring a page into the ram
+    - 
     - call funct 2
     - incrememnt simulation time
     - close input file
@@ -284,7 +283,6 @@ int main(int argc, char *argv[]){
         fprintf(stderr, "Error: Input file must have .txt extension\n");
         exit(1);
     }
-
     // Open input file
     FILE *in_file = fopen(in_txt, "r");
     if (!in_file) {
@@ -292,11 +290,12 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    // Validate in.txt file contents 
-    validate_in_contents(in_file);
+    // Validate in.txt file contents & puts all info inside globally defined array (input)
+    validate_in_contents(in_file); 
+    fclose(in_file); 
 
 
-    // Validate input file extension (in.txt)
+    // Validate output file extension (in.txt)
     char *out_txt = argv[2];
     char *out_extension = strrchr(out_txt, '.');
     if (!out_extension || strcmp(out_extension, ".txt") != 0) {
@@ -317,7 +316,6 @@ int main(int argc, char *argv[]){
 
 
     //close files after simulation running completed
-   fclose(in_file);
    fclose(out_file);
 
 }
