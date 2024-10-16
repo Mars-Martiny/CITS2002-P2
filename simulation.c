@@ -134,6 +134,19 @@ void validate_in_contents(FILE *in_file) {
 }
 
 
+//HELPER FUNCT for funct 1 helps create and initialise page
+memory *helper(int process_id, int page_num){
+    memory *page_info = (memory *)malloc(sizeof(memory)); //memory allocaton for a new page
+
+    //successful allocation checking
+    if (page_info == NULL){
+        printf("Memory allocation failed.\n");
+
+        exit(1); //if allocation fails
+    }
+}
+
+
 //Rohma
 //funct 1: initialise vm for 4 processes, each with 4 pages
     /*
