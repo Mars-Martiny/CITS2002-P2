@@ -2,6 +2,8 @@
 // Rohma Rehman 23845362
 // mac or linux ?????
 
+//BISMILLAH
+
 // Include necessary header files
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,7 +63,7 @@ int input_count = 0;    //initialist input count
 
 // Function to print usage error information
 void print_usage(const char *program_name) {
-    fprintf(stderr, "Usage: %s <ml_file> in.txt out.txt\n", program_name);
+    fprintf(stderr, "Usage: %s in.txt out.txt\n", program_name);
     exit(1);
 }
 // Function to report errors with line numbers
@@ -93,11 +95,11 @@ void validate_in_contents(FILE *in_file) {
         }
 
         //in.txt should contain a single line of integers separated by blanks
-        for (int i = 0 ; i < length(trimmed) ; i++) {
+        for (int i = 0 ; i < strlen(trimmed) ; i++) {
             if (i%2 == 0) {
                 //integer
                 if (isdigit(trimmed[i])) {
-                    int process_id = atoi(trimmed[i]);
+                    int process_id = atoi(&trimmed[i]);
                     
                     // process_id is a number between 0 and 3
                     if (process_id==0 || process_id==1 || process_id==2 || process_id==3) {
