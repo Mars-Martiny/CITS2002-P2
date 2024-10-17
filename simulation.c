@@ -311,11 +311,11 @@ void simulate(){
         //if found in ram, update last accessed time
         if (found_in_ram){
             ram[ram_index]->last_accessed = time_step; //update last accessed time
-            printf("\n", process_id, page_num, ram_index, time_step);
+            printf("%d , %d , %d in RAM index position %i\n", page->process_id, page->page_num, ram[ram_index]->last_accessed, ram_index);
         }
         //if page is not in ram, bring it into ram
         else {
-            printf("\n", process_id, page_num);
+            printf("%d , %d\n", page->process_id, page->page_num);
             page_to_ram(page);
         }
 
@@ -336,7 +336,7 @@ void simulate(){
     - close output file
     */
 
-void output_simulate(const char *output_file){
+void output_simulate(char *output_file){
     // Validate output file extension (out.txt)
     char *out_txt = output_file;
     char *out_extension = strrchr(out_txt, '.');
