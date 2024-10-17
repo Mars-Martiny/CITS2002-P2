@@ -2,7 +2,7 @@
 // Rohma Rehman 23845362
 // mac or linux ?????
 
-//BISMILLAH
+// بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ 
 
 // Include necessary header files
 #include <stdio.h>
