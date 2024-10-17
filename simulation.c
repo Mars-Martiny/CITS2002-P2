@@ -275,15 +275,6 @@ void page_to_ram(memory *page) {
 
 //Rohma
 //funct 3: read process requests from input file and simulate page requests
-    /*
-    - simulation of paging process by reading input array (global array), containing list of process ids
-    - each process id corresponds to a request to bring a page into the ram
-    - 
-    - call funct 2
-    - incrememnt simulation time
-    - close input file
-    */
-   //add check if process id and page number exist alr within ram, dont call mars functions, just increment time by one
 void simulate(){
     
     int page_num[4] = {0, 0, 0, 0}; //initial page num
