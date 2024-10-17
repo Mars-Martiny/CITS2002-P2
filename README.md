@@ -1,4 +1,5 @@
 cc -std=c11 -Wall -Werror simulation.c -o simulation.x
+./simulation.x in.txt out.txt
 
 CITS2002 - Second Project
 A simple simulation of virtual memory
