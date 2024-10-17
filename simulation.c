@@ -210,6 +210,7 @@ void page_to_ram(memory *page) {
         printf("Loaded page (P%d, %d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, page->last_accessed, 2*ram_page_count, 2*ram_page_count + 1);
         ram_page_count++;
     } 
+
     // If RAM is full, remove local LRU if exists otherwise remove global LRU in RAM
     else {
         //position of pages to evict RAM
@@ -231,9 +232,9 @@ void page_to_ram(memory *page) {
                         local_LRU_index = 2*i;      //only update index if older (both are local)
                     }
                 }
-
                 LRU_index++;      //non-zero if any local pages in RAM
             }
+
             else if (ram[2*i]->last_accessed < ram[global_LRU_index]->last_accessed) {
                 global_LRU_index = 2*i;
             }
@@ -248,20 +249,21 @@ void page_to_ram(memory *page) {
             LRU_index = global_LRU_index; // global LRU eviction
         }
         
-        memory *evicted_page = ram[LRU_index];
+        memory *evicted_page = ram[2 * LRU_index];
         printf("Evicting page (P%d, %d, %d) from RAM (position %d).\n", evicted_page->process_id, evicted_page->page_num, evicted_page->last_accessed, 2*LRU_index);
 
-        // Shift all other pages forward
-        for (int i = 1; i < RAM_PAGES; i++) {
-            ram[i - 1] = ram[i];
+        // Shift all other pages after the evicted page forward
+        for (int i = LRU_index + 1; i < RAM_PAGES; i++) {
+            ram[2*(i - 1)] = ram[2*i];
+            ram[2*(i - 1) + 1] = ram[2*i + 1];      //shift both locations of page 
         }
 
         // Load the new page into the last slot of RAM
-        ram[RAM_PAGES - 1] = page;
-        printf("Loaded page (P%d, %d) into RAM at index %d\n", page->process_id, page->page_num, RAM_PAGES - 1);
+        ram[2*(RAM_PAGES - 1)] = page;
+        ram[2*(RAM_PAGES - 1) +1] = page;
+        printf("Loaded page (P%d, %d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, page->last_accessed, 2*(RAM_PAGES - 1), 2*(RAM_PAGES - 1) + 1);
     }
 
-    time_step++;    //increment time step by one after each entry in the file
 }
 
 
