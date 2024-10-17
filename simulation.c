@@ -280,20 +280,45 @@ void page_to_ram(memory *page) {
     - incrememnt simulation time
     - close input file
     */
+   //add check if process id and page number exist alr within ram, dont call mars functions, just increment time by one
 void simulate(const char *input_file){
     
-    int page_num = 0;
+    int page_num = 0; //initial page num
+
+    //loop through all process ids in input array
     for (int i = 0; i < input_count ; i++){
-        int process_id = input[i];
+        int process_id = input[i]; //get p id from input array
+        memory *page = vm[process_id * PAGES_PER_PROCESS + page_num]; // fetch page from vm
 
-        memory *page = vm[process_id * PAGES_PER_PROCESS + page_num];
-        page_to_ram(page);
+        int found_in_ram = 0; //flag checking if page is alr in ram
+        int ram_index = -1;  // variable to store ram index if page is found
+        // set to -1 to represent a situation where the page has not been found in ram
 
+        //searching ram to check if page is alr there
+        for (int j = 0; j < ram_page_count*2; j += 2){ //check each page (eac page = 2 locations)
+            if (ram[j] != NULL && ram[j]-> process_id == process_id && ram[j] ->page_num == page_num) {
+                ram_index = j; //store index where page is found in ram 
+                found_in_ram = 1; //page found in ram
+                break;
+            }
+        }
+
+        //if found in ram, update last accessed time
+        if (found_in_ram){
+            ram[ram_index]->last_accessed = time_step; //update last accessed time
+            printf("\n", process_id, page_num, ram_index, time_step);
+        }
+        //if page is not in ram, bring it into ram
+        else {
+            printf("\n", process_id, page_num);
+            page_to_ram(page);
+        }
+
+        //increment page number and wrap around after 3 (0-3 cycle)
         page_num = (page_num + 1) % PAGES_PER_PROCESS;
 
-        page ->last_accessed = time_step++;
+        time_step++;
     }
- //ADD CHECK HERE?
 }
 
 //Rohma
@@ -331,7 +356,7 @@ void output_simulate(const char *output_file){
     }
 
     fprintf(out_file, "\n");
-    
+
 
 
 
