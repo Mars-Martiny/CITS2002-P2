@@ -288,20 +288,22 @@ void page_to_ram(memory *page) {
    //add check if process id and page number exist alr within ram, dont call mars functions, just increment time by one
 void simulate(){
     
-    int page_num = 0; //initial page num
+    int page_num[4] = {0, 0, 0, 0}; //initial page num
 
     //loop through all process ids in input array
     for (int i = 0; i < input_count ; i++){
         int process_id = input[i]; //get p id from input array
-        memory *page = vm[process_id * PAGES_PER_PROCESS + page_num]; // fetch page from vm
+        memory *page = vm[2 * process_id * PAGES_PER_PROCESS + 2 * page_num[process_id]]; // fetch page from vm
+
+        //printf("%d , %d , %d \n", page->process_id, page->page_num, page->last_accessed);
 
         int found_in_ram = 0; //flag checking if page is alr in ram
         int ram_index = -1;  // variable to store ram index if page is found
         // set to -1 to represent a situation where the page has not been found in ram
 
         //searching ram to check if page is alr there
-        for (int j = 0; j < ram_page_count*2; j += 2){ //check each page (eac page = 2 locations)
-            if (ram[j] != NULL && ram[j]-> process_id == process_id && ram[j] ->page_num == page_num) {
+        for (int j = 0; j < ram_page_count; j++){ //check each page (eac page = 2 locations)
+            if (ram[2*j] != NULL && ram[2*j]->process_id == process_id && ram[2*j]->page_num == page_num[process_id]) {
                 ram_index = j; //store index where page is found in ram 
                 found_in_ram = 1; //page found in ram
                 break;
@@ -311,16 +313,21 @@ void simulate(){
         //if found in ram, update last accessed time
         if (found_in_ram){
             ram[ram_index]->last_accessed = time_step; //update last accessed time
-            printf("%d , %d , %d in RAM index position %i\n", page->process_id, page->page_num, ram[ram_index]->last_accessed, ram_index);
+            printf("Updated page (P%d , %d , %d) in RAM at index position %i\n", page->process_id, page->page_num, ram[ram_index]->last_accessed, ram_index);
         }
         //if page is not in ram, bring it into ram
         else {
-            printf("%d , %d\n", page->process_id, page->page_num);
+            //printf("%d , %d\n", page->process_id, page->page_num);
             page_to_ram(page);
         }
 
         //increment page number and wrap around after 3 (0-3 cycle)
-        page_num = (page_num + 1) % PAGES_PER_PROCESS;
+        if (page_num[process_id] != 3) {
+            page_num[process_id] += 1;
+        }
+        else {
+            page_num[process_id] = 0;
+        }
 
         time_step++;
     }
