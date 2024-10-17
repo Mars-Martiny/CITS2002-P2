@@ -1,3 +1,5 @@
+cc -std=c11 -Wall -Werror simulation.c -o simulation.x
+
 CITS2002 - Second Project
 A simple simulation of virtual memory
 • This project is worth 10% of the marks in the unit.
