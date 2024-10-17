@@ -21,13 +21,6 @@
 
 #define access _access      //for the <io.h> header file ,, instead of <unistd.h>
 
-//key:
-//vm = virtual memory
-//struct = structure
-//defn = definition/ define
-//funct = function
-//init = initialise
-
 
 // Define given constants 
 #define NUM_PROCESSES 4      // Total number of processes
@@ -61,7 +54,6 @@ int input[100];
 int input_count = 0;     //counts number of process ids listed in in.txt      
 
 
-//Mars
 // Function to print usage error information
 void print_usage(const char *program_name) {
     fprintf(stderr, "Usage: %s in.txt out.txt\n", program_name);
@@ -139,9 +131,6 @@ void validate_in_contents(FILE *in_file) {
 
 
 //HELPER FUNCT for funct 1 helps create and initialise page
-// - allocate memory for each page
-// - using malloc?
-// - initialise struct fields
 memory *creator(int process_id, int page_num){
     memory *page_info = (memory *)malloc(sizeof(memory)); //memory allocaton for a new page
 
@@ -160,15 +149,7 @@ memory *creator(int process_id, int page_num){
 }
 
 
-//Rohma
 //funct 1: initialise vm for 4 processes, each with 4 pages
-    /*
-    - set up vm for system by initialising memory pages for each process and setting up page table to indicate all pages are initially in disk (vm)
-    - loop over each process
-        - for each process loop over each of their 4 pages 
-    - store page in vm
-    - update page table
-    */
 void init_vm(){
    int vm_pg_index = 0;
    
@@ -187,18 +168,7 @@ void init_vm(){
 }
 
 
-//Mars
 //funct 2: bring pages from vm to ram when requested
-    /*
-    - bring a requested page from the vm to the ram
-    - if the ram is full apply LRU algorithm to evict least recently used page for the same process
-    - find next page to bring into ram
-    - check for free space in ram
-    - handle case when ram is full
-    - bring page into ram
-    - update page table and last accessed time
-    */
-
 // Function to find and replace a page in RAM using LRU
 void page_to_ram(memory *page) {
     // Update the page's third value with the global time (assuming third value is `last_used_time`)
@@ -273,7 +243,6 @@ void page_to_ram(memory *page) {
 }
 
 
-//Rohma
 //funct 3: read process requests from input file and simulate page requests
 void simulate(){
     
@@ -320,15 +289,6 @@ void simulate(){
     }
 }
 
-//Rohma
-//funct 4: print page tables and ram content to output file after simulation
-    /*
-    - outputs results of simulation to specified output file, incl final state of each process's page table and the contents of its ram
-    - open output file
-    - print page tables for all processes
-    - print contents of ram
-    - close output file
-    */
 
 void output_simulate(char *output_file){
     // Validate output file extension (out.txt)
@@ -376,15 +336,6 @@ void output_simulate(char *output_file){
 }
 
 
-//Mars & Rohma xoxo
-//main funct
-    /*
-    - check command line args
-    - initialise virtual memory
-    - simulate paging process
-    - output final results
-    - return success
-    */
 int main(int argc, char *argv[]){
     // Check for correct usage      ...ie. simulation in.txt out.txt
     if (argc != 3) {
