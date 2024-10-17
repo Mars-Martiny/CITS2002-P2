@@ -286,7 +286,7 @@ void page_to_ram(memory *page) {
     - close input file
     */
    //add check if process id and page number exist alr within ram, dont call mars functions, just increment time by one
-void simulate(const char *input_file){
+void simulate(){
     
     int page_num = 0; //initial page num
 
@@ -413,12 +413,11 @@ int main(int argc, char *argv[]){
     validate_in_contents(in_file); 
     fclose(in_file); 
 
-init_vm();
+    init_vm();
 
-simulate(in_txt);
+    simulate();
 
-output_simulate(argv[2]);
+    output_simulate(argv[2]);
 
-return 0;
-
+    return 0;
 }
