@@ -207,7 +207,7 @@ void page_to_ram(memory *page) {
     if (ram_page_count < RAM_PAGES) {
         ram[2 * ram_page_count] = page;
         ram[2 * ram_page_count + 1] = page;     //page in 2 contiguous locations
-        printf("Loaded page (P%d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, 2*ram_page_count, 2*ram_page_count + 1);
+        printf("Loaded page (P%d, %d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, page->last_accessed, 2*ram_page_count, 2*ram_page_count + 1);
         ram_page_count++;
     } 
     // If RAM is full, remove local LRU if exists otherwise remove global LRU in RAM
@@ -217,7 +217,7 @@ void page_to_ram(memory *page) {
         int global_LRU_index = 0;
         
         //if this value is non-zero then a local LRU exists
-        int local_or_global = 0; 
+        int LRU_index = 0; 
         
         // check for local Least Recently Used (LRU)
         for (int i = 0; i < RAM_PAGES ; i++) {
@@ -232,16 +232,24 @@ void page_to_ram(memory *page) {
                     }
                 }
 
-                local_or_global++;      //
+                LRU_index++;      //non-zero if any local pages in RAM
             }
             else if (ram[2*i]->last_accessed < ram[global_LRU_index]->last_accessed) {
                 global_LRU_index = 2*i;
             }
         }
         
-        memory *evicted_page = ram[0]; // LRU eviction: evict the last accessed page in 
         
-        printf("Evicting page (P%d, %d) from RAM.\n", evicted_page->process_id, evicted_page->page_num);
+        // LRU eviction: evict the last accessed page 
+        if (LRU_index != 0) {
+            LRU_index = local_LRU_index; // local LRU eviction
+        }
+        else{
+            LRU_index = global_LRU_index; // global LRU eviction
+        }
+        
+        memory *evicted_page = ram[LRU_index];
+        printf("Evicting page (P%d, %d, %d) from RAM (position %d).\n", evicted_page->process_id, evicted_page->page_num, evicted_page->last_accessed, 2*LRU_index);
 
         // Shift all other pages forward
         for (int i = 1; i < RAM_PAGES; i++) {
