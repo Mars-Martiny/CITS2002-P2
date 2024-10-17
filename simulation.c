@@ -211,7 +211,6 @@ void page_to_ram(memory *page) {
 
         //update page_table array for shifted pages
         page_table[page->process_id][page->page_num] = ram_page_count;
-        printf("Loaded page (P%d, %d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, page->last_accessed, 2*ram_page_count, 2*ram_page_count + 1);
         ram_page_count++;
     } 
 
@@ -255,8 +254,7 @@ void page_to_ram(memory *page) {
         
         memory *evicted_page = ram[2 * LRU_index];
         page_table[evicted_page->process_id][evicted_page->page_num] = 99;  //update page_table array for removed page
-        printf("Evicting page (P%d, %d, %d) from RAM (position %d).\n", evicted_page->process_id, evicted_page->page_num, evicted_page->last_accessed, 2*LRU_index);
-
+        
         // Shift all other pages after the evicted page forward
         for (int i = LRU_index + 1; i < RAM_PAGES; i++) {
             ram[2*(i - 1)] = ram[2*i];
@@ -269,7 +267,7 @@ void page_to_ram(memory *page) {
         // Load the new page into the last slot of RAM
         ram[2*(RAM_PAGES - 1)] = page;
         ram[2*(RAM_PAGES - 1) +1] = page;
-        printf("Loaded page (P%d, %d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, page->last_accessed, 2*(RAM_PAGES - 1), 2*(RAM_PAGES - 1) + 1);
+        page_table[page->process_id][page->page_num] = RAM_PAGES - 1;
     }
 
 }
@@ -295,8 +293,6 @@ void simulate(){
         int process_id = input[i]; //get p id from input array
         memory *page = vm[2 * process_id * PAGES_PER_PROCESS + 2 * page_num[process_id]]; // fetch page from vm
 
-        //printf("%d , %d , %d \n", page->process_id, page->page_num, page->last_accessed);
-
         int found_in_ram = 0; //flag checking if page is alr in ram
         int ram_index = -1;  // variable to store ram index if page is found
         // set to -1 to represent a situation where the page has not been found in ram
@@ -312,12 +308,12 @@ void simulate(){
 
         //if found in ram, update last accessed time
         if (found_in_ram){
-            ram[ram_index]->last_accessed = time_step; //update last accessed time
-            printf("Updated page (P%d , %d , %d) in RAM at index position %i\n", page->process_id, page->page_num, ram[ram_index]->last_accessed, ram_index);
+            //update last accessed time
+            ram[2*ram_index]->last_accessed = time_step; 
+            ram[2*ram_index + 1]->last_accessed = time_step;
         }
         //if page is not in ram, bring it into ram
         else {
-            //printf("%d , %d\n", page->process_id, page->page_num);
             page_to_ram(page);
         }
 
@@ -363,12 +359,14 @@ void output_simulate(char *output_file){
         for (int page = 0; page < PAGES_PER_PROCESS; page++){
             fprintf(out_file, "%d", page_table[process][page]);  // Print page table
             if (page < PAGES_PER_PROCESS - 1) {
-                fprintf(out_file, ","); //add comma betw page numbers
+                fprintf(out_file, ", "); //add comma betw page numbers
             }
         }
         fprintf(out_file, "\n"); //new line after each process page table
     }
     
+    fprintf(out_file, "\n"); //new line between process pages and RAM outputs
+
     //output contents of ram
     for (int i = 0; i < RAM_SIZE; i++) {
         if (ram[i] != NULL) {
@@ -377,7 +375,7 @@ void output_simulate(char *output_file){
             fprintf(out_file, "-,-,-");  // Empty ram slots
         }
         if (i < RAM_SIZE - 1) {
-            fprintf(out_file, ";"); //separate ram entries w/ semicolons
+            fprintf(out_file, "; "); //separate ram entries w/ semicolons
         }
     }
     fprintf(out_file, "\n"); //new line after ram contents
