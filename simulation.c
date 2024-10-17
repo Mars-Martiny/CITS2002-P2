@@ -58,7 +58,7 @@ int ram_page_count = 0;  // track no. of pages in RAM
 
 //defn array to hold process_id integers from in.txt 
 int input[100];
-    //initialist input count      
+int input_count = 0;     //counts number of process ids listed in in.txt      
 
 
 //Mars
@@ -80,7 +80,6 @@ void validate_in_contents(FILE *in_file) {
     char line[1000];
     int line_number = 0;
     int line_count = 0;
-    int input_count = 0;
 
     while (fgets(line, sizeof(line), in_file)) {
         line_number++;
@@ -244,7 +243,7 @@ void page_to_ram(memory *page) {
 void simulate(const char *input_file){
     
     int page_num = 0;
-    for (int i = 0; i < _countof(input) ; i++){
+    for (int i = 0; i < input_count ; i++){
         int process_id = input[i];
 
         memory *page = vm[process_id * PAGES_PER_PROCESS + page_num];
