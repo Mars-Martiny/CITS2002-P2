@@ -181,7 +181,7 @@ void init_vm(){
 
         vm_pg_index += 2; //move to next 2 slots
 
-        page_table[process][page] = 1;
+        page_table[process][page] = 99;
     }
    }
 }
@@ -268,8 +268,6 @@ void page_to_ram(memory *page) {
 }
 
 
-
-
 //Rohma
 //funct 3: read process requests from input file and simulate page requests
     /*
@@ -346,22 +344,32 @@ void output_simulate(const char *output_file){
         exit(1);
     }
 
-    fprintf(out_file, "\n");
+    //output the page tables for all processes
     for (int process = 0; process < NUM_PROCESSES; process++){
-        fprintf(out_file, "Process %d page table: \n", process);
         for (int page = 0; page < PAGES_PER_PROCESS; page++){
-            fprintf(out_file, "  Page %d: %s\n", page, (page_table[process][page] == 0) ? "In RAM" : "In VM");
+            fprintf(out_file, "%d", page_table[process][page]);  // Print page table
+            if (page < PAGES_PER_PROCESS - 1) {
+                fprintf(out_file, ","); //add comma betw page numbers
+            }
         }
-        fprintf(out_file, "\n");
+        fprintf(out_file, "\n"); //new line after each process page table
     }
+    
+    //output contents of ram
+    for (int i = 0; i < RAM_SIZE; i++) {
+        if (ram[i] != NULL) {
+            fprintf(out_file, "%d,%d,%d", ram[i]->process_id, ram[i]->page_num, ram[i]->last_accessed);
+        } else {
+            fprintf(out_file, "-,-,-");  // Empty ram slots
+        }
+        if (i < RAM_SIZE - 1) {
+            fprintf(out_file, ";"); //separate ram entries w/ semicolons
+        }
+    }
+    fprintf(out_file, "\n"); //new line after ram contents
 
-    fprintf(out_file, "\n");
-
-
-
-
-    //close files after simulation running completed
-   fclose(out_file);
+    //close file after writing is completed
+    fclose(out_file);
 }
 
 
@@ -399,10 +407,10 @@ int main(int argc, char *argv[]){
     fclose(in_file); 
 
 
-   init_vm();
+//    init_vm();
 
-   simulate();
+//    simulate();
 
-   output_simulate();
+//    output_simulate();
 
 }
