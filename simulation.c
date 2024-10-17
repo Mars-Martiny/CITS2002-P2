@@ -1,8 +1,5 @@
 // Maryam Saeed 23121354
 // Rohma Rehman 23845362
-// mac or linux ????? both???????????
-
-// بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ 
 
 // Include necessary header files
 #include <stdio.h>
@@ -67,7 +64,7 @@ void report_error(const char *message, int line_number) {
 
 
 // Function to validate the contents of the in.txt file 
-    // Expectss a single line of integers separated by blanks (aka spaces ' ')
+// Expects a single line of integers separated by blanks (aka spaces ' ')
 void validate_in_contents(FILE *in_file) {
     char line[1000];
     int line_number = 0;
@@ -130,7 +127,7 @@ void validate_in_contents(FILE *in_file) {
 }
 
 
-//HELPER FUNCT for funct 1 helps create and initialise page
+//HELPER FUNCTION helps create and initialise page for init_vm
 memory *creator(int process_id, int page_num){
     memory *page_info = (memory *)malloc(sizeof(memory)); //memory allocaton for a new page
 
@@ -149,7 +146,7 @@ memory *creator(int process_id, int page_num){
 }
 
 
-//funct 1: initialise vm for 4 processes, each with 4 pages
+//initialise vm for 4 processes, each with 4 pages
 void init_vm(){
    int vm_pg_index = 0;
    
@@ -168,7 +165,6 @@ void init_vm(){
 }
 
 
-//funct 2: bring pages from vm to ram when requested
 // Function to find and replace a page in RAM using LRU
 void page_to_ram(memory *page) {
     // Update the page's third value with the global time (assuming third value is `last_used_time`)
@@ -243,7 +239,7 @@ void page_to_ram(memory *page) {
 }
 
 
-//funct 3: read process requests from input file and simulate page requests
+//read process requests from input file and simulate page requests
 void simulate(){
     
     int page_num[4] = {0, 0, 0, 0}; //initial page num
