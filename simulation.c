@@ -200,6 +200,9 @@ void init_vm(){
 
 // Function to find and replace a page in RAM using LRU
 void page_to_ram(memory *page) {
+    // Update the page's third value with the global time (assuming third value is `last_used_time`)
+    page->last_accessed = time_step;
+
     // If there is room in RAM, just add the page
     if (ram_page_count < RAM_PAGES) {
         ram[2 * ram_page_count] = page;
@@ -207,11 +210,35 @@ void page_to_ram(memory *page) {
         printf("Loaded page (P%d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, 2*ram_page_count, 2*ram_page_count + 1);
         ram_page_count++;
     } 
+    // If RAM is full, remove local LRU if exists otherwise remove global LRU in RAM
     else {
-        // if (  ) {
+        //position of pages to evict RAM
+        int local_LRU_index = 0;
+        int global_LRU_index = 0;
+        
+        //if this value is non-zero then a local LRU exists
+        int local_or_global = 0; 
+        
+        // check for local Least Recently Used (LRU)
+        for (int i = 0; i < RAM_PAGES ; i++) {
+            if (ram[2*i]->process_id == page->process_id) {
+                //check  if LRU index is NOT local
+                if (ram[local_LRU_index]->process_id != page->process_id) {
+                    local_LRU_index = 2*i;          //assign current index which is local
+                }
+                else {
+                    if (ram[2*i]->last_accessed < ram[local_LRU_index]->last_accessed) {
+                        local_LRU_index = 2*i;      //only update index if older (both are local)
+                    }
+                }
 
-        // }
-        // If RAM is full, implement LRU to replace the oldest page
+                local_or_global++;      //
+            }
+            else if (ram[2*i]->last_accessed < ram[global_LRU_index]->last_accessed) {
+                global_LRU_index = 2*i;
+            }
+        }
+        
         memory *evicted_page = ram[0]; // LRU eviction: evict the last accessed page in 
         
         printf("Evicting page (P%d, %d) from RAM.\n", evicted_page->process_id, evicted_page->page_num);
@@ -225,6 +252,8 @@ void page_to_ram(memory *page) {
         ram[RAM_PAGES - 1] = page;
         printf("Loaded page (P%d, %d) into RAM at index %d\n", page->process_id, page->page_num, RAM_PAGES - 1);
     }
+
+    time_step++;    //increment time step by one after each entry in the file
 }
 
 
