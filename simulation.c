@@ -116,14 +116,15 @@ void validate_in_contents(FILE *in_file) {
 
             //white space
             else {
-                if (!isspace(trimmed[i])) {
+                if (!isspace(trimmed[i])) { //not whitespace
                     report_error("INCORRECT SYNTAX", line_number);        
                 }
-                else if (trimmed[i] == '\0' || trimmed[i] == '\n') {
+                //line-end indicator
+                else if (trimmed[i] == '\0' || trimmed[i] == '\n') {    
                     line_count++;
                     continue;
                 }
-                else if (trimmed[i] != ' ') {
+                else if (trimmed[i] != ' ') {//wrong type of whitespace
                     report_error("INCORRECT SYNTAX", line_number);
                 }
             }
