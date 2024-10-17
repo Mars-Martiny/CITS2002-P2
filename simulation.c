@@ -285,7 +285,7 @@ void simulate(const char *input_file){
  //ADD CHECK HERE?
 }
 
-//Mars
+//Rohma
 //funct 4: print page tables and ram content to output file after simulation
     /*
     - outputs results of simulation to specified output file, incl final state of each process's page table and the contents of its ram
@@ -294,8 +294,38 @@ void simulate(const char *input_file){
     - print contents of ram
     - close output file
     */
+
 void output_simulate(const char *output_file){
-    //insert code
+    // Validate output file extension (out.txt)
+    char *out_txt = output_file;
+    char *out_extension = strrchr(out_txt, '.');
+    if (!out_extension || strcmp(out_extension, ".txt") != 0) {
+        fprintf(stderr, "Error: Output file must have .txt extension\n");
+        exit(1);
+    }
+
+    FILE *out_file = fopen(out_txt, "w");
+    if (!out_file) {
+        perror("Error opening output file");
+        exit(1);
+    }
+
+    fprintf(out_file, "\n");
+    for (int process = 0; process < NUM_PROCESSES; process++){
+        fprintf(out_file, "Process %d page table: \n", process);
+        for (int page = 0; page < PAGES_PER_PROCESS; page++){
+            fprintf(out_file, "  Page %d: %s\n", page, (page_table[process][page] == 0) ? "In RAM" : "In VM");
+        }
+        fprintf(out_file, "\n");
+    }
+
+    fprintf(out_file, "\n");
+    
+
+
+
+    //close files after simulation running completed
+   fclose(out_file);
 }
 
 
@@ -333,27 +363,10 @@ int main(int argc, char *argv[]){
     fclose(in_file); 
 
 
-    // Validate output file extension (in.txt)
-    char *out_txt = argv[2];
-    char *out_extension = strrchr(out_txt, '.');
-    if (!out_extension || strcmp(out_extension, ".txt") != 0) {
-        fprintf(stderr, "Error: Output file must have .txt extension\n");
-        exit(1);
-    }
-
-    // Open output file
-    FILE *out_file = fopen(out_txt, "w");
-    if (!out_file) {
-        perror("Error opening output file");
-        exit(1);
-    }
-
-
-    //
    init_vm();
 
+   simulate();
 
-    //close files after simulation running completed
-   fclose(out_file);
+   output_simulate();
 
 }
