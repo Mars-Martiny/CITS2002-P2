@@ -406,11 +406,12 @@ int main(int argc, char *argv[]){
     validate_in_contents(in_file); 
     fclose(in_file); 
 
+init_vm();
 
-//    init_vm();
+simulate(in_txt);
 
-//    simulate();
+output_simulate(argv[2]);
 
-//    output_simulate();
+return 0;
 
 }
