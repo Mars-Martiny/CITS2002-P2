@@ -208,6 +208,9 @@ void page_to_ram(memory *page) {
     if (ram_page_count < RAM_PAGES) {
         ram[2 * ram_page_count] = page;
         ram[2 * ram_page_count + 1] = page;     //page in 2 contiguous locations
+
+        //update page_table array for shifted pages
+        page_table[page->process_id][page->page_num] = ram_page_count;
         printf("Loaded page (P%d, %d, %d) into RAM at index %d and %d\n", page->process_id, page->page_num, page->last_accessed, 2*ram_page_count, 2*ram_page_count + 1);
         ram_page_count++;
     } 
@@ -251,12 +254,16 @@ void page_to_ram(memory *page) {
         }
         
         memory *evicted_page = ram[2 * LRU_index];
+        page_table[evicted_page->process_id][evicted_page->page_num] = 99;  //update page_table array for removed page
         printf("Evicting page (P%d, %d, %d) from RAM (position %d).\n", evicted_page->process_id, evicted_page->page_num, evicted_page->last_accessed, 2*LRU_index);
 
         // Shift all other pages after the evicted page forward
         for (int i = LRU_index + 1; i < RAM_PAGES; i++) {
             ram[2*(i - 1)] = ram[2*i];
-            ram[2*(i - 1) + 1] = ram[2*i + 1];      //shift both locations of page 
+            ram[2*(i - 1) + 1] = ram[2*i + 1];      //shift both locations of page
+            
+            //update page_table array for shifted pages 
+            page_table[ram[2*(i-1)]->process_id][ram[2*(i-1)]->page_num] = i - 1;  
         }
 
         // Load the new page into the last slot of RAM
